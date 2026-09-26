@@ -1,0 +1,16 @@
+fund,fund_name,issuer,as_of,holdings
+MDY,SPDR S&P MIDCAP 400 ETF Trust,State Street SPDR,2026-09-24,399
+QQQ,Invesco QQQ Trust,Invesco,2026-09-24,101
+SDY,SPDR S&P Dividend ETF,State Street SPDR,2026-09-24,155
+SPY,SPDR S&P 500 ETF Trust,State Street SPDR,2026-09-24,503
+SPYD,SPDR Portfolio S&P 500 High Dividend ETF,State Street SPDR,2026-09-24,78
+SPYG,SPDR Portfolio S&P 500 Growth ETF,State Street SPDR,2026-09-24,151
+SPYV,SPDR Portfolio S&P 500 Value ETF,State Street SPDR,2026-09-24,435
+XLC,Communication Services Select Sector SPDR ETF,State Street SPDR,2026-09-24,23
+XLE,Energy Select Sector SPDR ETF,State Street SPDR,2026-09-24,21
+XLF,Financial Select Sector SPDR ETF,State Street SPDR,2026-09-24,76
+XLI,Industrial Select Sector SPDR ETF,State Street SPDR,2026-09-24,83
+XLK,Technology Select Sector SPDR ETF,State Street SPDR,2026-09-24,74
+XLP,Consumer Staples Select Sector SPDR ETF,State Street SPDR,2026-09-24,33
+XLV,Health Care Select Sector SPDR ETF,State Street SPDR,2026-09-24,60
+XLY,Consumer Discretionary Select Sector SPDR ETF,State Street SPDR,2026-09-24,47

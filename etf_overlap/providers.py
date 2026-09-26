@@ -28,7 +28,7 @@ COLUMNS = ["ticker", "name", "weight"]
 # A plain US listing: 1-5 letters, optionally a share class (BRK.B, MOG.A).
 _TICKER_RE = re.compile(r"^[A-Z]{1,5}(\.[A-Z])?$")
 # Futures show up as e.g. "XAK TECHNOLOGY    DEC26".
-_FUTURES_RE = re.compile(r"\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}\b")
+_FUTURES_RE = re.compile(r"\b(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}\b")
 _NON_EQUITY_NAMES = re.compile(r"MONEY MARKET|U\.?S\.? DOLLAR|CASH", re.IGNORECASE)
 
 
@@ -78,7 +78,8 @@ def parse_ssga_xlsx(content: bytes, fund: str) -> Holdings:
     raw = pd.read_excel(io.BytesIO(content), header=None)
     header_row = raw.index[raw.iloc[:, 0].astype(str).str.strip() == "Name"][0]
 
-    fund_name = str(raw.iloc[0, 1]).replace("�", "").strip()
+    fund_name = re.sub(r"[�®]", "", str(raw.iloc[0, 1]))
+    fund_name = re.sub(r"^State Street\s+", "", re.sub(r"\s+", " ", fund_name)).strip()
     as_of_text = str(raw.iloc[2, 1]).replace("As of", "").strip()
     as_of = datetime.strptime(as_of_text, "%d-%b-%Y").date()
 
