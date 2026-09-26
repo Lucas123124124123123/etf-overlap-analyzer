@@ -22,7 +22,13 @@ def save_holdings(h: Holdings, data_dir: Path = DATA_DIR) -> None:
 
     funds_file = data_dir / "funds.csv"
     funds = pd.read_csv(funds_file) if funds_file.exists() else pd.DataFrame(columns=FUND_COLUMNS)
-    row = {"fund": h.fund, "fund_name": h.fund_name, "issuer": h.issuer, "as_of": h.as_of.isoformat(), "holdings": len(h.positions)}
+    row = {
+        "fund": h.fund,
+        "fund_name": h.fund_name,
+        "issuer": h.issuer,
+        "as_of": h.as_of.isoformat(),
+        "holdings": len(h.positions),
+    }
     funds = pd.concat([funds[funds["fund"] != h.fund], pd.DataFrame([row])], ignore_index=True)
     funds.sort_values("fund").to_csv(funds_file, index=False)
 

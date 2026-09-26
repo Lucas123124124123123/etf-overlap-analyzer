@@ -14,6 +14,7 @@ import re
 import time
 from dataclasses import dataclass
 from datetime import date, datetime
+from typing import Any
 
 import pandas as pd
 import requests
@@ -112,7 +113,7 @@ INVESCO_FUND_URL = (
 INVESCO_HEADERS = {"User-Agent": USER_AGENT, "Accept": "*/*", "Origin": "https://www.invesco.com"}
 
 
-def parse_invesco_json(payload: dict, fund: str, fund_name: str | None = None) -> Holdings:
+def parse_invesco_json(payload: dict[str, Any], fund: str, fund_name: str | None = None) -> Holdings:
     rows = [
         {
             "ticker": h.get("ticker") or "",
@@ -130,7 +131,6 @@ def parse_invesco_json(payload: dict, fund: str, fund_name: str | None = None) -
 def _get_invesco(session: requests.Session, url: str, attempts: int = 4) -> requests.Response:
     # The CDN in front of the API sometimes caches a 406; a cache-busting
     # query parameter plus a short retry usually gets a fresh answer.
-    resp = None
     for attempt in range(attempts):
         resp = session.get(f"{url}&_={int(time.time() * 1000)}", headers=INVESCO_HEADERS, timeout=30)
         if resp.ok and resp.content:
@@ -144,7 +144,11 @@ def fetch_invesco(fund: str, session: requests.Session | None = None) -> Holding
     session = session or requests.Session()
     payload = _get_invesco(session, INVESCO_URL.format(ticker=fund.upper())).json()
     try:
-        fund_name = _get_invesco(session, INVESCO_FUND_URL.format(ticker=fund.upper()), attempts=1).json().get("fundName")
+        fund_name = (
+            _get_invesco(session, INVESCO_FUND_URL.format(ticker=fund.upper()), attempts=1)
+            .json()
+            .get("fundName")
+        )
     except requests.RequestException:
         fund_name = None
     return parse_invesco_json(payload, fund, fund_name)

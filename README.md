@@ -5,7 +5,7 @@
 ![ETF Overlap Analyzer dashboard](docs/screenshot.png)
 
 [![tests](https://github.com/Lucas123124124123123/etf-overlap-analyzer/actions/workflows/tests.yml/badge.svg)](https://github.com/Lucas123124124123123/etf-overlap-analyzer/actions/workflows/tests.yml)
-![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 ## The problem
@@ -87,13 +87,23 @@ data/                       holdings snapshot (one CSV per fund + funds.csv)
 tests/                      unit tests, with real issuer files as fixtures
 ```
 
-## Tests
+## Development
 
 ```bash
-pytest
+pip install -r requirements-dev.txt
+pre-commit install
 ```
 
-The parsers are tested against real issuer files saved in `tests/fixtures/`, so a format change on the issuer's side shows up as a failing test instead of silently wrong numbers. The tests run on GitHub Actions on every push.
+Every commit and every push runs the same checks:
+
+| Check | Tool | Rule |
+|---|---|---|
+| Lint | ruff | pycodestyle, pyflakes, isort, bugbear, pyupgrade and more |
+| Format | ruff format | no diff allowed |
+| Types | mypy | `--strict` on the `etf_overlap` package |
+| Tests | pytest + pytest-cov | fails below 85% coverage |
+
+The parsers are tested against real issuer files saved in `tests/fixtures/`, so a format change on the issuer's side shows up as a failing test instead of silently wrong numbers.
 
 ## Roadmap
 

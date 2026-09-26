@@ -21,25 +21,25 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from etf_overlap.data import save_holdings  # noqa: E402
-from etf_overlap.providers import PROVIDERS, parse_invesco_json, parse_ssga_xlsx  # noqa: E402
+from etf_overlap.data import save_holdings
+from etf_overlap.providers import PROVIDERS, parse_invesco_json, parse_ssga_xlsx
 
 # Fund ticker -> issuer. Add a line here to support a new ETF.
 FUNDS = {
-    "SPY": "ssga",   # S&P 500
+    "SPY": "ssga",  # S&P 500
     "SPYG": "ssga",  # S&P 500 Growth
     "SPYV": "ssga",  # S&P 500 Value
     "SPYD": "ssga",  # S&P 500 High Dividend
-    "SDY": "ssga",   # S&P High Yield Dividend Aristocrats
-    "MDY": "ssga",   # S&P MidCap 400
-    "XLK": "ssga",   # Technology
-    "XLF": "ssga",   # Financials
-    "XLV": "ssga",   # Health Care
-    "XLE": "ssga",   # Energy
-    "XLY": "ssga",   # Consumer Discretionary
-    "XLC": "ssga",   # Communication Services
-    "XLI": "ssga",   # Industrials
-    "XLP": "ssga",   # Consumer Staples
+    "SDY": "ssga",  # S&P High Yield Dividend Aristocrats
+    "MDY": "ssga",  # S&P MidCap 400
+    "XLK": "ssga",  # Technology
+    "XLF": "ssga",  # Financials
+    "XLV": "ssga",  # Health Care
+    "XLE": "ssga",  # Energy
+    "XLY": "ssga",  # Consumer Discretionary
+    "XLC": "ssga",  # Communication Services
+    "XLI": "ssga",  # Industrials
+    "XLP": "ssga",  # Consumer Staples
     "QQQ": "invesco",  # Nasdaq-100
 }
 
@@ -55,7 +55,9 @@ def import_file(fund: str, path: Path) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("funds", nargs="*", help="fund tickers to refresh (default: all)")
     parser.add_argument("--file", nargs=2, metavar=("FUND", "PATH"), help="import a manually downloaded file")
     args = parser.parse_args()

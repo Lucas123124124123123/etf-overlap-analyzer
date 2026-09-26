@@ -2,9 +2,27 @@
 name = "etf-overlap-analyzer"
 version = "0.1.0"
 description = "See how much your ETFs really overlap and what you actually own underneath."
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = { text = "MIT" }
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "N", "RUF", "PTH"]
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["etf_overlap"]
+strict = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = ["plotly.*", "streamlit.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+addopts = "--cov=etf_overlap --cov-report=term-missing --cov-fail-under=85"

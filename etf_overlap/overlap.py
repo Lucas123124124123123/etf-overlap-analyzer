@@ -99,7 +99,9 @@ def look_through(holdings: dict[str, pd.DataFrame], allocation: dict[str, float]
     # Some issuers publish names in ALL CAPS; prefer a mixed-case spelling when one exists.
     ranked = long.assign(_caps=long["name"].str.isupper()).sort_values("_caps", kind="stable")
     names = ranked.drop_duplicates("ticker").set_index("ticker")["name"]
-    by_fund = long.pivot_table(index="ticker", columns="fund", values="contribution", aggfunc="sum", fill_value=0.0)
+    by_fund = long.pivot_table(
+        index="ticker", columns="fund", values="contribution", aggfunc="sum", fill_value=0.0
+    )
     by_fund.columns.name = None
     out = by_fund.copy()
     out.insert(0, "exposure", by_fund.sum(axis=1))

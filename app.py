@@ -42,7 +42,9 @@ def base_layout(fig: go.Figure, height: int) -> go.Figure:
     return fig
 
 
-def exposure_chart(exposure: pd.DataFrame, funds: list[str], colors: dict[str, str], top: int = 15) -> go.Figure:
+def exposure_chart(
+    exposure: pd.DataFrame, funds: list[str], colors: dict[str, str], top: int = 15
+) -> go.Figure:
     data = exposure.head(top).iloc[::-1]
     labels = data["ticker"] + "  " + data["name"].str.slice(0, 28)
     fig = go.Figure()
@@ -54,9 +56,15 @@ def exposure_chart(exposure: pd.DataFrame, funds: list[str], colors: dict[str, s
             orientation="h",
             marker=dict(color=colors[fund], line=dict(color=SURFACE, width=2)),
             customdata=data[["exposure"]].values,
-            hovertemplate=f"<b>%{{y}}</b><br>via {fund}: %{{x:.2f}}%<br>total: %{{customdata[0]:.2f}}%<extra></extra>",
+            hovertemplate=(
+                f"<b>%{{y}}</b><br>via {fund}: %{{x:.2f}}%<br>total: %{{customdata[0]:.2f}}%<extra></extra>"
+            ),
         )
-    fig.update_layout(barmode="stack", bargap=0.3, legend=dict(orientation="h", y=1.06, x=0, title=None, traceorder="normal"))
+    fig.update_layout(
+        barmode="stack",
+        bargap=0.3,
+        legend=dict(orientation="h", y=1.06, x=0, title=None, traceorder="normal"),
+    )
     fig.update_xaxes(ticksuffix="%", gridcolor=GRID, zeroline=False, color=MUTED)
     fig.update_yaxes(color=INK_2, tickfont=dict(size=12))
     return base_layout(fig, 34 * top + 60)
@@ -103,7 +111,9 @@ selected = st.sidebar.multiselect(
 )
 st.sidebar.caption("How much is in each one? Dollars or percentages, it's rescaled automatically.")
 allocation = {
-    f: st.sidebar.number_input(f, min_value=0.0, value=10_000.0, step=1_000.0, format="%.0f", key=f"alloc_{f}")
+    f: st.sidebar.number_input(
+        f, min_value=0.0, value=10_000.0, step=1_000.0, format="%.0f", key=f"alloc_{f}"
+    )
     for f in selected
 }
 st.sidebar.divider()
@@ -115,7 +125,10 @@ st.sidebar.caption(
 # --- Main page ------------------------------------------------------------
 
 st.title("ETF Overlap Analyzer")
-st.markdown("Owning five funds doesn't mean you're diversified. See how much they overlap and what you **really** own underneath.")
+st.markdown(
+    "Owning five funds doesn't mean you're diversified. "
+    "See how much they overlap and what you **really** own underneath."
+)
 
 if len(selected) < 2 or sum(allocation.values()) <= 0:
     st.info("Pick at least two ETFs and put some amount in each to see the analysis.")
@@ -131,10 +144,14 @@ pairs = redundant_pairs(matrix, REDUNDANT_AT)
 k1, k2, k3, k4 = st.columns(4)
 k1.metric("Different stocks you own", f"{conc.stocks:,}")
 k2.metric("Money in your top 10 stocks", f"{conc.top10_share:.0f}%")
-k3.metric("Behaves like", f"{conc.effective_stocks:.0f} stocks", help=(
-    "Diversification expressed as a number of equally weighted stocks "
-    "(inverse Herfindahl index). Lower = more concentrated."
-))
+k3.metric(
+    "Behaves like",
+    f"{conc.effective_stocks:.0f} stocks",
+    help=(
+        "Diversification expressed as a number of equally weighted stocks "
+        "(inverse Herfindahl index). Lower = more concentrated."
+    ),
+)
 top_pair = max(
     ((fa, fb, matrix.loc[fa, fb]) for i, fa in enumerate(selected) for fb in selected[i + 1 :]),
     key=lambda p: p[2],
@@ -142,16 +159,28 @@ top_pair = max(
 k4.metric(f"Biggest overlap · {top_pair[0]} ↔ {top_pair[1]}", f"{top_pair[2]:.0f}%")
 
 if pairs:
-    lines = [f"- **{a}** and **{b}** share **{v:.0f}%** of their money in the same stocks." for a, b, v in pairs]
-    st.warning("**Possible duplication**\n\n" + "\n".join(lines) + "\n\nYou may be paying two fees for roughly the same exposure.", icon="⚠️")
+    lines = [
+        f"- **{a}** and **{b}** share **{v:.0f}%** of their money in the same stocks." for a, b, v in pairs
+    ]
+    st.warning(
+        "**Possible duplication**\n\n"
+        + "\n".join(lines)
+        + "\n\nYou may be paying two fees for roughly the same exposure.",
+        icon="⚠️",
+    )
 else:
     st.success(f"No pair of your funds overlaps by more than {REDUNDANT_AT:.0f}%.", icon="✅")
 
 left, right = st.columns([3, 2], gap="large")
 with left:
     st.subheader("What you really own")
-    st.caption("Your 15 biggest stock positions once every fund is opened up. Each color shows which fund it comes from.")
-    st.plotly_chart(exposure_chart(exposure, selected, colors), width="stretch", config={"displayModeBar": False})
+    st.caption(
+        "Your 15 biggest stock positions once every fund is opened up. "
+        "Each color shows which fund it comes from."
+    )
+    st.plotly_chart(
+        exposure_chart(exposure, selected, colors), width="stretch", config={"displayModeBar": False}
+    )
 with right:
     st.subheader("How much each pair overlaps")
     st.caption("Share of money invested in the same stocks, in the same amounts, by both funds.")
@@ -164,10 +193,22 @@ fb = c2.selectbox("Fund B", [f for f in selected if f != fa], index=0)
 pair = pair_overlap(fa, holdings[fa], fb, holdings[fb])
 m1, m2, m3 = st.columns(3)
 m1.metric("Weight overlap", f"{pair.weight_overlap:.1f}%")
-m2.metric(f"{fa} stocks also in {fb}", f"{pair.common_count} of {pair.count_a}", f"{pair.share_of_a:.0f}%", delta_color="off")
-m3.metric(f"{fb} stocks also in {fa}", f"{pair.common_count} of {pair.count_b}", f"{pair.share_of_b:.0f}%", delta_color="off")
+m2.metric(
+    f"{fa} stocks also in {fb}",
+    f"{pair.common_count} of {pair.count_a}",
+    f"{pair.share_of_a:.0f}%",
+    delta_color="off",
+)
+m3.metric(
+    f"{fb} stocks also in {fa}",
+    f"{pair.common_count} of {pair.count_b}",
+    f"{pair.share_of_b:.0f}%",
+    delta_color="off",
+)
 st.dataframe(
-    pair.common.rename(columns={"weight_a": f"Weight in {fa}", "weight_b": f"Weight in {fb}", "overlap": "Overlap"}),
+    pair.common.rename(
+        columns={"weight_a": f"Weight in {fa}", "weight_b": f"Weight in {fb}", "overlap": "Overlap"}
+    ),
     hide_index=True,
     width="stretch",
     height=280,
@@ -176,12 +217,23 @@ st.dataframe(
         "name": "Company",
         f"Weight in {fa}": st.column_config.NumberColumn(format="%.2f%%"),
         f"Weight in {fb}": st.column_config.NumberColumn(format="%.2f%%"),
-        "Overlap": st.column_config.ProgressColumn(format="%.2f%%", min_value=0, max_value=float(pair.common["overlap"].max()) if len(pair.common) else 1.0),
+        "Overlap": st.column_config.ProgressColumn(
+            format="%.2f%%",
+            min_value=0,
+            max_value=float(pair.common["overlap"].max()) if len(pair.common) else 1.0,
+        ),
     },
 )
 
 with st.expander("Full look-through table"):
-    table = exposure.rename(columns={"ticker": "Ticker", "name": "Company", "exposure": "Portfolio %", "funds_holding": "Held by # funds"})
+    table = exposure.rename(
+        columns={
+            "ticker": "Ticker",
+            "name": "Company",
+            "exposure": "Portfolio %",
+            "funds_holding": "Held by # funds",
+        }
+    )
     st.dataframe(
         table,
         hide_index=True,
