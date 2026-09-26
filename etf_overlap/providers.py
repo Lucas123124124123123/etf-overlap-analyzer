@@ -78,6 +78,7 @@ def parse_ssga_xlsx(content: bytes, fund: str) -> Holdings:
     raw = pd.read_excel(io.BytesIO(content), header=None)
     header_row = raw.index[raw.iloc[:, 0].astype(str).str.strip() == "Name"][0]
 
+    # Strip registered-trademark signs (and the mojibake some files carry instead).
     fund_name = re.sub(r"[�®]", "", str(raw.iloc[0, 1]))
     fund_name = re.sub(r"^State Street\s+", "", re.sub(r"\s+", " ", fund_name)).strip()
     as_of_text = str(raw.iloc[2, 1]).replace("As of", "").strip()
