@@ -4,7 +4,7 @@
 
 ![ETF Overlap Analyzer dashboard](docs/screenshot.png)
 
-[![tests](https://github.com/Lucas123124124123123/etf-overlap-analyzer/actions/workflows/tests.yml/badge.svg)](https://github.com/Lucas123124124123123/etf-overlap-analyzer/actions/workflows/tests.yml)
+[![tests](https://github.com/lucas-santos-f/etf-overlap-analyzer/actions/workflows/tests.yml/badge.svg)](https://github.com/lucas-santos-f/etf-overlap-analyzer/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
@@ -30,7 +30,7 @@ Investors and advisors check this by hand in spreadsheets, or pay for tools that
 ## Quick start
 
 ```bash
-git clone https://github.com/Lucas123124124123123/etf-overlap-analyzer.git
+git clone https://github.com/lucas-santos-f/etf-overlap-analyzer.git
 cd etf-overlap-analyzer
 pip install -r requirements.txt
 streamlit run app.py
